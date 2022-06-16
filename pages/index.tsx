@@ -3,7 +3,7 @@ import { Application, Graphics as PixiGraphics } from 'pixi.js';
 import { useEffect, useState } from 'react';
 import Diamond from '../components/Diamond';
 import drawLine from '../components/Line';
-import Spiral from '../components/spiral';
+import Spiral from '../components/Spiral';
 
 const stageDimensions = 800;
 
