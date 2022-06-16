@@ -10,8 +10,6 @@ interface props {
 }
 
 export default function Spiral({ geometry, distance, rotation, count, turns }: props) {
-
-    console.log("wasd")
     return <>{
         new Array(count).fill("").map((_, i) => (
             <Graphics
@@ -28,8 +26,8 @@ export default function Spiral({ geometry, distance, rotation, count, turns }: p
                     distance
                 }
                 rotation={
-                    Math.sin(Math.PI / count * i) *
-                    (rotation + 10)
+                    Math.sin((Math.PI * 4) / count * i) *
+                    rotation
                 }
             />
         ))

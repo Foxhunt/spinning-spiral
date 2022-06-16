@@ -2,7 +2,7 @@ import { Graphics, _ReactPixi } from '@inlet/react-pixi';
 import { Graphics as PixiGraphics } from 'pixi.js';
 import { useCallback } from 'react';
 
-const color = 0xff0000
+const color = 0xffffff
 
 export default function Diamond(props: _ReactPixi.IGraphics) {
   const draw = useCallback((g: PixiGraphics) => {

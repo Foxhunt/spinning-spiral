@@ -30,8 +30,7 @@ export default function Home() {
 
   const rotation = time * Math.PI * .0013
 
-  const oscilation = 1 - Math.abs(((time * 0.0024) % 2) - 1);
-  const distance = (52 * 2) + easeInOutSine(oscilation) * (90 * 2)
+  const distance = (70 * 2) + easeInOutSine(time * 0.0022) * (75 * 2)
 
   useEffect(() => {
     const g = drawLine()
@@ -50,6 +49,7 @@ export default function Home() {
       options={{
         antialias: true,
         autoDensity: true,
+        preserveDrawingBuffer: true,
       }}
       onClick={() => { setRunning(!running) }}
     >
@@ -61,13 +61,13 @@ export default function Home() {
         // @ts-ignore
         <Container
           position={[stageDimensions / 2, stageDimensions / 2]}
-          rotation={-rotation * 0.3}>
+          rotation={-rotation * 0.3 * 0}>
           {
             graphic &&
             <Spiral
               geometry={graphic}
-              count={360 * 3}
-              turns={4}
+              count={360 * 2}
+              turns={1}
               distance={distance}
               rotation={rotation}
             />
