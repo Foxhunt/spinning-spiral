@@ -1,4 +1,5 @@
 import { Container, Stage } from '@inlet/react-pixi';
+import { useControls } from 'leva';
 import { Application, Graphics as PixiGraphics } from 'pixi.js';
 import { useEffect, useState } from 'react';
 import Diamond from '../components/Diamond';
@@ -11,12 +12,69 @@ export default function Home() {
   const [app, setApp] = useState<Application>();
 
   const [running, setRunning] = useState(true)
-  const [time, setTime] = useState(0)
   const [graphic, setGraphic] = useState<PixiGraphics>()
+  const [time, setTime] = useState(0)
+  const [rotation, setRotation] = useState(0)
+  const [distance, setDistance] = useState(0)
+  const [count, setCount] = useState(360 * 2)
+  const [turns, setTurns] = useState(1)
+
+  const [, setControls] = useControls(() => ({
+    running: {
+      value: true,
+      onChange: (value) => {
+        setRunning(value)
+      }
+    },
+    count: {
+      value: 360 * 2,
+      step: 1,
+      onChange: (value) => setCount(value)
+    },
+    turns: {
+      value: 1,
+      step: 1,
+      onChange: (value) => setTurns(value)
+    },
+    time: {
+      value: 0,
+      step: 10,
+      onChange: (value) => {
+        setTime(value)
+        setRotation(value * Math.PI * .0013)
+        setDistance((70 * 2) + easeInOutSine(value * 0.0022) * (75 * 2))
+      },
+    },
+    rotation: {
+      value: 0,
+      step: .1,
+      onChange: (value) => {
+        setRotation(value)
+      },
+    },
+    distance: {
+      value: 0,
+      step: 1,
+      onChange: (value) => {
+        setDistance(value)
+      },
+    },
+  }))
 
   useEffect(() => {
     const tick = (dt) => {
-      setTime(time => time + dt)
+      setTime(time => {
+        const newTime = time + dt
+
+        const newRotation = newTime * Math.PI * .0013
+        setRotation(newRotation)
+
+        const newDistance = (70 * 2) + easeInOutSine(time * 0.0022) * (75 * 2)
+        setDistance(newDistance)
+
+        setControls({ time: newTime, distance: newDistance, rotation: newRotation })
+        return newTime
+      })
     };
 
     if (app && running) {
@@ -26,11 +84,10 @@ export default function Home() {
         app.ticker.remove(tick);
       };
     }
-  }, [app, running]);
+  }, [app, running, time]);
 
-  const rotation = time * Math.PI * .0013
-
-  const distance = (70 * 2) + easeInOutSine(time * 0.0022) * (75 * 2)
+  // const rotation = time * Math.PI * .0013
+  // const distance = (70 * 2) + easeInOutSine(time * 0.0022) * (75 * 2)
 
   useEffect(() => {
     const g = drawLine()
@@ -51,7 +108,11 @@ export default function Home() {
         autoDensity: true,
         preserveDrawingBuffer: true,
       }}
-      onClick={() => { setRunning(!running) }}
+      onClick={() => {
+        const newRunning = !running
+        setRunning(newRunning)
+        setControls({ running: newRunning })
+      }}
     >
       <Diamond
         scale={4}
@@ -66,8 +127,8 @@ export default function Home() {
             graphic &&
             <Spiral
               geometry={graphic}
-              count={360 * 2}
-              turns={1}
+              count={count}
+              turns={turns}
               distance={distance}
               rotation={rotation}
             />
